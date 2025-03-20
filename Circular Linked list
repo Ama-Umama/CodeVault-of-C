@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Songs
+{
+    char name[100];
+    struct Songs* next;
+} Songs;
+
+int main()
+{
+    int n, repeat;
+    char songName[100];
+    Songs *head = NULL, *temp = NULL, *newSong = NULL;
+
+    printf("Enter the number of songs in the playlist: ");
+    scanf("%d", &n);
+    getchar();
+
+    // Creating the linked list for displaying songs
+    for (int i = 0; i < n; i++)
+    {
+        printf("Enter song no. %d: ", i + 1);
+
+        int j = 0;
+        char ch;
+        while ((ch = getchar()) != '\n' && j < 99)
+            songName[j++] = ch;
+
+        songName[j] = '\0';
+
+        // Allocate memory for new song node
+        newSong = (Songs*)malloc(sizeof(Songs));
+
+        // Copy song name into the new node
+        for (j = 0; songName[j] != '\0'; j++)
+        {
+            newSong->name[j] = songName[j];
+        }
+        newSong->name[j] = '\0';
+
+        newSong->next = NULL;
+
+        if (head == NULL)
+        {
+            head = newSong;
+            temp = newSong;
+        }
+        else
+        {
+            temp->next = newSong;
+            temp = newSong;
+        }
+    }
+
+    // Connecting nodes for loop
+    temp->next = head;
+
+    // Play the playlist in a loop with repeat prompt
+    do
+    {
+        temp = head;  // Start from the first song
+        printf("\nPlaying the playlist...\n");
+        for (int i = 0; i < n; i++)
+        {
+            printf("%s\n", temp->name);
+            temp = temp->next;  // Move to the next song
+        }
+
+        // Ask the user if they want to repeat the playlist
+        printf("\nDo you want to repeat the playlist? (1 for yes, 0 for no): ");
+        scanf("%d", &repeat);  // Read the user's choice
+    }
+    while (repeat == 1);    // Repeat if user enters 1
+
+    printf("Playlist ended.\n");
+
+    return 0;
+}
